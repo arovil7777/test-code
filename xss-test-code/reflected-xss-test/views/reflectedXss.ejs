@@ -1,23 +1,27 @@
 <!DOCTYPE html>
 <html lang="ko">
-    <head>
-        <meta charset="UTF-8">
-        <title>Reflected XSS Test</title>
-    </head>
-    <body>
-        <div class="form">
-            <form action="/reflected" method="get">
-                <div class="form__input">
-                    <div>
-                        <span>검색어</span>
-                        <input type="text" name="keyword" value="<%- keyword %>"/>
-                    </div>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Reflected XSS Test</title>
+</head>
+
+<body>
+    <h1>검색 페이지</h1>
+    <div class="form">
+        <form action="/reflected" method="get">
+            <div class="form__input">
+                <div>
+                    <span>검색어</span>
+                    <input type="text" name="keyword" value="<%- keyword %>" />
                 </div>
-                <input class="form__button" type="submit" value="검색"/>
-            </form>
-        </div>
-        <div class="container">
-            <div class="container__header">검색어 <%- keyword %></div>
-        </div>
-    </body>
+            </div>
+            <input class="form__button" type="submit" value="검색" />
+        </form>
+    </div>
+    <div class="container">
+        <div class="container__header">입력된 검색어: <%- keyword %></div>
+    </div>
+</body>
+
 </html>
