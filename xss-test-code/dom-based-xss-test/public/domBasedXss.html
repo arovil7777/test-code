@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <script type="text/javascript">
+        const hash = window.location.hash.slice(1);
+        if (hash) {
+            window.location.href = decodeURIComponent(hash);
+        }
+        window.addEventListener("hashchange", () => {
+            window.location.href = decodeURIComponent(window.location.hash.slice(1));
+        })
+    </script>
+    <meta charset="UTF-8">
+    <title>DOM Based XSS Test</title>
+</head>
+
+<body>
+    <h1>DOM 페이지</h1>
+    <div class="container">
+        <a id="first" href="#first" class="item">First 바로가기</a>
+        <a id="second" href="#second" class="item">Second 바로가기</a>
+    </div>
+</body>
+
+</html>
