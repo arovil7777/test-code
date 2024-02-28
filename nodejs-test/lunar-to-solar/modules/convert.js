@@ -6,13 +6,6 @@
  * 추석: 음력 8월 15일
  *  
  */
-// 설 (구정)
-console.log(`설 (구정)\n음력 20240101 -> 양력 ${lunarToSolar("20240101")}`);
-// 부처님 오신 날
-console.log(`\n부처님 오신 날\n음력 20240408 -> 양력 ${lunarToSolar("20240408")}`);
-// 추석
-console.log(`\n추석\n음력 20240815 -> 양력 ${lunarToSolar("20240815")}`);
-
 function lunarToSolar(lunaDate) {
     // 음력 데이터 (평달 - 작은달 :1,  큰달:2 )
     // (윤달이 있는 달 - 평달이 작고 윤달도 작으면 :3 , 평달이 작고 윤달이 크면 : 4)
@@ -364,7 +357,7 @@ function lunarToSolar(lunaDate) {
         sday = "0" + sday;
     }
 
-    return `${syear}${smonth}${sday}`;
+    return `${syear}-${smonth}-${sday}`;
 }
 
 function get_year(src) {
@@ -393,3 +386,5 @@ function get_day(src, day) {
     else
         return src;
 }
+
+module.exports = lunarToSolar;
