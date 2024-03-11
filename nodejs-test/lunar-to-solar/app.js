@@ -34,7 +34,11 @@ function calculateHolidayDate(year, month, date, offset, isLunar) {
 }
 
 function printHolidayInfo(name, startDate, endDate) {
-    console.log(`${name}\nDate: ${startDate} ~ ${endDate}\n`);
+    if (startDate === endDate) {
+        console.log(`${name}\nDate: ${startDate}\n`);
+    } else {
+        console.log(`${name}\nDate: ${startDate} ~ ${endDate}\n`);
+    }
 }
 
 for (const holiday of koreanHolidays) {
