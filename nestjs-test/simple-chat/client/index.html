@@ -1,25 +1,47 @@
 <html lang="ko">
-    <head>
-        <meta charset="UTF-8">
-        <title>채팅 앱</title>
-    </head>
-    <body>
-        <div class="container">
-            <h1>Socket.io 채팅 앱</h1>
-            <p>내 닉네임: <span id="random-animal-name"></span></p>
-            <div class="rooms">
-                <div class="room" id="room01">
-                    <h2>ROOM 01</h2>
-                    <div class="button-container">
-                        <button onclick="joinRoom('room01')">입장</button>
-                        <button onclick="exitRoom('room01')">퇴장</button>
-                    </div>
-                    <div class="users" id="room01Users"></div>
-                    <div class="chat-container" id="room01-chat-container">
-                        <ul class="chat-list" id="room01-chat-list"></ul>
-                    </div>
+
+<head>
+    <meta charset="UTF-8">
+    <title>채팅 앱</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Socket.io 채팅 앱</h1>
+        <p>내 닉네임: <span id="random-animal-name"></span></p>
+        <div class="rooms">
+            <div class="room" id="room01">
+                <h2>ROOM 01</h2>
+                <div class="button-container">
+                    <button onclick="joinRoom('room01')">입장</button>
+                    <button onclick="exitRoom('room01')">퇴장</button>
+                </div>
+                <div class="users" id="room01-users"></div>
+                <div class="chat-container" id="room01-chat-container">
+                    <ul class="chat-list" id="room01-chat-list"></ul>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="room01-message-input" placeholder="메시지를 입력하세요." />
+                    <button onclick="sendRoomMessage('room01')">보내기</button>
+                </div>
+            </div>
+            <div class="room" id="room02">
+                <h2>ROOM 02</h2>
+                <div class="button-container">
+                    <button onclick="joinRoom('room02')">입장</button>
+                    <button onclick="exitRoom('room02')">퇴장</button>
+                </div>
+                <div class="users" id="room02-users"></div>
+                <div class="chat-container" id="room02-chat-container">
+                    <ul class="chat-list" id="room02-chat-list"></ul>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="room02-message-input" placeholder="메시지를 입력하세요." />
+                    <button onclick="sendRoomMessage('room02')">보내기</button>
                 </div>
             </div>
         </div>
-    </body>
+    </div>
+</body>
+
 </html>
