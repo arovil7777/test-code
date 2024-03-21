@@ -70,6 +70,48 @@
             '고래',
             '상어'
         ];
+
+        const getRandomAnimalName = animalNames[Math.floor(Math.random() * animalNames.length)] + Math.floor(Math.random() * 100).toString();
+        document.getElementById('random-animal-name').innerHTML = getRandomAnimalName;
+
+        socket.emit('setUserNick', getRandomAnimalName);
+
+        const roomUsers = {
+            room01: document.getElementById('room01-users'),
+            room02: document.getElementById('room02-users')
+        };
+
+        const roomChatList = {
+            room01: document.getElementById('room01-chat-list'),
+            room02: document.getElementById('room02-chat-list')
+        };
+
+        const roomChatContainer = {
+            room01: document.getElementById('room01-chat-container'),
+            room02: document.getElementById('room02-chat-container')
+        };
+
+        const roomMessageInput = {
+            room01: document.getElementById('room01-message-input'),
+            room02: document.getElementById('room02-message-input')
+        };
+
+        const inputMessageRoom01 = document.getElementById('room01-message-input');
+        const inputMessageRoom02 = document.getElementById('room02-message-input');
+
+        function joinRoom(room) {
+            socket.emit('join', room);
+        }
+
+        function exitRoom(room) {
+            if (!room) {
+                return;
+            }
+
+            roomUsers[room].innerHTML = '';
+            roomChatList[room].innerHTML = '';
+            socket.emit('exit', room);
+        }
     </script>
 </body>
 
