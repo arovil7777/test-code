@@ -112,6 +112,45 @@
             roomChatList[room].innerHTML = '';
             socket.emit('exit', room);
         }
+
+        function sendRoomMessage(room) {
+            const message = roomMessageInput[room].value;
+
+            if (message.trim() !== '') {
+                socket.emit('chatMessage', { message, room });
+                roomMessageInput[room].value = '';
+            }
+        }
+
+        socket.on('userList', ({ room, userList }) => {
+            if (!room) {
+                return;
+            }
+
+            const usersElement = roomUsers[room];
+            usersElement.innerHTML = '';
+
+            console.log({ room, userList });
+            userList.forEach((userId) => {
+                const p = document.createElement('p');
+                p.textContent = userId;
+                usersElement.appendChild(p);
+            });
+        });
+
+        socket.on('userJoined', ({ userId, room }) => {
+            const message = `${userId} joined the room.`;
+            appendMessage(room, message);
+        });
+
+        socket.on('userLeft', ({ userId, room }) => {
+            const message = `${userId} left the room.`;
+            appendMessage(room, message);
+        });
+
+        socket.on('chatMessage', ({ userId, message, room }) => {
+            appendMessage(room, `${userId} : ${message}`);
+        });
     </script>
 </body>
 
