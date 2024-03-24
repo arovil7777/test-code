@@ -151,6 +151,30 @@
         socket.on('chatMessage', ({ userId, message, room }) => {
             appendMessage(room, `${userId} : ${message}`);
         });
+
+        function appendMessage(room, message) {
+            const chatList = roomChatList[room];
+            const li = document.createElement('li');
+            li.className = 'chat-item';
+            const p = document.createElement('p');
+            p.textContent = message;
+            li.appendChild(p);
+            chatList.appendChild(li);
+
+            roomChatContainer[room].scrollTop = roomChatContainer[room].scrollHeight;
+        }
+
+        inputMessageRoom01.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') {
+                sendRoomMessage('room01');
+            }
+        });
+
+        inputMessageRoom02.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') {
+                sendRoomMessage('room02');
+            }
+        });
     </script>
 </body>
 
