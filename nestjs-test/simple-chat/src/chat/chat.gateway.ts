@@ -1,4 +1,8 @@
-import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import {
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+} from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway()
@@ -25,31 +29,64 @@ export class ChatGateway {
 
     // 클라이언트 연결이 종료되면 해당 클라이언트가 속한 모든 방에서 유저를 제거합니다.
     Object.keys(this.roomUsers).forEach((room) => {
-      const index = this.roomUsers[room]?.indexOf(this.clientNickName[client.id]);
+      const index = this.roomUsers[room]?.indexOf(
+        this.clientNickName[client.id],
+      );
 
       if (index !== -1) {
         this.roomUsers[room].splice(index, 1);
-        this.server.to(room)
+        this.server
+          .to(room)
           .emit('userLeft', { userId: this.clientNickName[client.id], room });
-        this.server.to(room)
+        this.server
+          .to(room)
           .emit('userList', { room, userList: this.roomUsers[room] });
       }
     });
 
     // 모든 방의 유저 목록을 업데이트하여 emit합니다.
     Object.keys(this.roomUsers).forEach((room) => {
-      this.server.to(room)
+      this.server
+        .to(room)
         .emit('userList', { room, userList: this.roomUsers[room] });
     });
 
     // 연결된 클라이언트 목록을 업데이트하여 emit합니다.
     this.server.emit('userList', {
-      room: null, userList: Object.keys(this.connectedClients)
+      room: null,
+      userList: Object.keys(this.connectedClients),
     });
   }
 
-  @SubscribeMessage('message')
-  handleMessage(client: any, payload: any): string {
-    return 'Hello world!';
+  @SubscribeMessage('setUserNick')
+  handleSetUserNick(client: Socket, nick: string): void {
+    this.clientNickName[client.id] = nick;
+  }
+
+  @SubscribeMessage('join')
+  handleJoin(client: Socket, room: string): void {
+    // 이미 접속 중인 방인지 확인합니다.
+    if (client.rooms.has(room)) {
+      return;
+    }
+
+    client.join(room);
+
+    if (!this.roomUsers[room]) {
+      this.roomUsers[room] = [];
+    }
+
+    this.roomUsers[room].push(this.clientNickName[client.id]);
+    this.server
+      .to(room)
+      .emit('userJoined', { userId: this.clientNickName[client.id], room });
+    this.server
+      .to(room)
+      .emit('userList', { room, userList: this.roomUsers[room] });
+
+    this.server.emit('userList', {
+      room: null,
+      userList: Object.keys(this.connectedClients),
+    });
   }
 }
