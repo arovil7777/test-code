@@ -89,4 +89,38 @@ export class ChatGateway {
       userList: Object.keys(this.connectedClients),
     });
   }
+
+  @SubscribeMessage('exit')
+  handleExit(client: Socket, room: string): void {
+    // 방에 접속되어 있는 상태가 아니라면 return합니다.
+    if (!client.rooms.has(room)) {
+      return;
+    }
+
+    client.leave(room);
+
+    const index = this.roomUsers[room]?.indexOf(this.clientNickName[client.id]);
+    if (index !== -1) {
+      this.roomUsers[room].splice(index, 1);
+      this.server
+        .to(room)
+        .emit('userLeft', { userId: this.clientNickName[client.id], room });
+      this.server
+        .to(room)
+        .emit('userList', { room, userList: this.roomUsers[room] });
+    }
+
+    // 모든 방의 유저 목록을 업데이트하여 emit합니다.
+    Object.keys(this.roomUsers).forEach((room) => {
+      this.server
+        .to(room)
+        .emit('userList', { room, userList: this.roomUsers[room] });
+    });
+
+    // 연결된 클라이언트 목록을 업데이트하여 emit합니다.
+    this.server.emit('userList', {
+      room: null,
+      userList: Object.keys(this.connectedClients),
+    });
+  }
 }
