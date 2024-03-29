@@ -123,4 +123,24 @@ export class ChatGateway {
       userList: Object.keys(this.connectedClients),
     });
   }
+
+  @SubscribeMessage('getUserList')
+  handleGetUserList(room: string): void {
+    this.server
+      .to(room)
+      .emit('userList', { room, userList: this.roomUsers[room] });
+  }
+
+  @SubscribeMessage('chatMessage')
+  handleChatMessage(
+    client: Socket,
+    data: { message: string; room: string },
+  ): void {
+    // 클라이언트가 보낸 채팅 메시지를 해당 방으로 전달합니다.
+    this.server.to(data.room).emit('chatMessage', {
+      userId: this.clientNickName[client.id],
+      message: data.message,
+      room: data.room,
+    });
+  }
 }
