@@ -50,3 +50,22 @@ body {
 .room .button-container button:hover {
     background-color: #45a049;
 }
+
+.users {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #777;
+}
+
+.users p {
+    margin: 5px 0;
+}
+
+.chat-container {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    max-height: 300px;
+    overflow: auto;
+    background-color: #f9f9f9;
+}
