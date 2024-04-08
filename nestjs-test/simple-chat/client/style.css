@@ -97,3 +97,18 @@ body {
     border-radius: 5px;
     font-size: 14px;
 }
+
+.chat-input button {
+    padding: 8px 16px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.chat-input button:hover {
+    background-color: #45a049;
+}
