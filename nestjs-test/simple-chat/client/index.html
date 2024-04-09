@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ko">
 
 <head>
@@ -22,7 +23,8 @@
                     <ul class="chat-list" id="room01-chat-list"></ul>
                 </div>
                 <div class="chat-input">
-                    <input type="text" id="room01-message-input" placeholder="메시지를 입력하세요." />
+                    <input type="text" id="room01-message-input" placeholder="메시지를 입력하세요."
+                        onkeyup="sendMessage(event, 'room01')" />
                     <button onclick="sendRoomMessage('room01')">보내기</button>
                 </div>
             </div>
@@ -37,7 +39,8 @@
                     <ul class="chat-list" id="room02-chat-list"></ul>
                 </div>
                 <div class="chat-input">
-                    <input type="text" id="room02-message-input" placeholder="메시지를 입력하세요." />
+                    <input type="text" id="room02-message-input" placeholder="메시지를 입력하세요."
+                        onkeyup="sendMessage(event, 'room02')" />
                     <button onclick="sendRoomMessage('room02')">보내기</button>
                 </div>
             </div>
@@ -46,6 +49,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.js"></script>
     <script>
         const socket = io();
+        const roomUsers = {
+            room01: document.getElementById('room01-users'),
+            room02: document.getElementById('room02-users')
+        };
+
+        const roomChatList = {
+            room01: document.getElementById('room01-chat-list'),
+            room02: document.getElementById('room02-chat-list')
+        };
+
+        const roomChatContainer = {
+            room01: document.getElementById('room01-chat-container'),
+            room02: document.getElementById('room02-chat-container')
+        };
+
+        const roomMessageInput = {
+            room01: document.getElementById('room01-message-input'),
+            room02: document.getElementById('room02-message-input')
+        };
 
         // 임의의 닉네임 지정 (동물)
         const animalNames = [
@@ -77,45 +99,20 @@
 
         socket.emit('setUserNick', getRandomAnimalName);
 
-        const roomUsers = {
-            room01: document.getElementById('room01-users'),
-            room02: document.getElementById('room02-users')
-        };
-
-        const roomChatList = {
-            room01: document.getElementById('room01-chat-list'),
-            room02: document.getElementById('room02-chat-list')
-        };
-
-        const roomChatContainer = {
-            room01: document.getElementById('room01-chat-container'),
-            room02: document.getElementById('room02-chat-container')
-        };
-
-        const roomMessageInput = {
-            room01: document.getElementById('room01-message-input'),
-            room02: document.getElementById('room02-message-input')
-        };
-
-        const inputMessageRoom01 = document.getElementById('room01-message-input');
-        const inputMessageRoom02 = document.getElementById('room02-message-input');
-
-        function joinRoom(room) {
+        const joinRoom = (room) => {
             socket.emit('join', room);
         }
 
-        function exitRoom(room) {
-            if (!room) {
-                return;
-            }
+        const exitRoom = (room) => {
+            if (!room) return;
 
             roomUsers[room].innerHTML = '';
             roomChatList[room].innerHTML = '';
             socket.emit('exit', room);
         }
 
-        function sendRoomMessage(room) {
-            const message = roomMessageInput[room].value;
+        const sendRoomMessage = (room) => {
+            const message = roomMessageInput[room].value.trim();
 
             if (message.trim() !== '') {
                 socket.emit('chatMessage', { message, room });
@@ -123,37 +120,7 @@
             }
         }
 
-        socket.on('userList', ({ room, userList }) => {
-            if (!room) {
-                return;
-            }
-
-            const usersElement = roomUsers[room];
-            usersElement.innerHTML = '';
-
-            console.log({ room, userList });
-            userList.forEach((userId) => {
-                const p = document.createElement('p');
-                p.textContent = userId;
-                usersElement.appendChild(p);
-            });
-        });
-
-        socket.on('userJoined', ({ userId, room }) => {
-            const message = `${userId} joined the room.`;
-            appendMessage(room, message);
-        });
-
-        socket.on('userLeft', ({ userId, room }) => {
-            const message = `${userId} left the room.`;
-            appendMessage(room, message);
-        });
-
-        socket.on('chatMessage', ({ userId, message, room }) => {
-            appendMessage(room, `${userId} : ${message}`);
-        });
-
-        function appendMessage(room, message) {
+        const appendMessage = (room, message) => {
             const chatList = roomChatList[room];
             const li = document.createElement('li');
             li.className = 'chat-item';
@@ -165,17 +132,35 @@
             roomChatContainer[room].scrollTop = roomChatContainer[room].scrollHeight;
         }
 
-        inputMessageRoom01.addEventListener('keyup', (event) => {
-            if (event.key === 'Enter') {
-                sendRoomMessage('room01');
-            }
+        const sendMessage = (event, room) => {
+            if (event.key === 'Enter') sendRoomMessage(room);
+        }
+
+        socket.on('userList', ({ room, userList }) => {
+            if (!room) return;
+
+            const usersElement = roomUsers[room];
+            usersElement.innerHTML = '';
+            userList.forEach((userId) => {
+                const p = document.createElement('p');
+                p.textContent = userId;
+                usersElement.appendChild(p);
+            });
         });
 
-        inputMessageRoom02.addEventListener('keyup', (event) => {
-            if (event.key === 'Enter') {
-                sendRoomMessage('room02');
-            }
+        socket.on('userJoined', ({ userId, room }) => {
+            appendMessage(room, `${userId} joined the room.`);
         });
+
+        socket.on('userLeft', ({ userId, room }) => {
+            appendMessage(room, `${userId} left the room.`);
+        });
+
+        socket.on('chatMessage', ({ userId, message, room }) => {
+            appendMessage(room, `${userId} : ${message}`);
+        });
+
+        document.addEventListener('DOMContentLoaded', setRandomAnimalName);
     </script>
 </body>
 
