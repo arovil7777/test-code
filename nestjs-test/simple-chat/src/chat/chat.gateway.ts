@@ -28,27 +28,20 @@ export class ChatGateway {
     delete this.connectedClients[client.id];
 
     // 클라이언트 연결이 종료되면 해당 클라이언트가 속한 모든 방에서 유저를 제거합니다.
-    Object.keys(this.roomUsers).forEach((room) => {
-      const index = this.roomUsers[room]?.indexOf(
-        this.clientNickName[client.id],
-      );
-
+    Object.entries(this.roomUsers).forEach(([room, userList]) => {
+      const index = userList?.indexOf(this.clientNickName[client.id]);
       if (index !== -1) {
-        this.roomUsers[room].splice(index, 1);
+        userList.splice(index, 1);
         this.server
           .to(room)
           .emit('userLeft', { userId: this.clientNickName[client.id], room });
-        this.server
-          .to(room)
-          .emit('userList', { room, userList: this.roomUsers[room] });
+        this.server.to(room).emit('userList', { room, userList });
       }
     });
 
     // 모든 방의 유저 목록을 업데이트하여 emit합니다.
-    Object.keys(this.roomUsers).forEach((room) => {
-      this.server
-        .to(room)
-        .emit('userList', { room, userList: this.roomUsers[room] });
+    Object.entries(this.roomUsers).forEach(([room, userList]) => {
+      this.server.to(room).emit('userList', { room, userList });
     });
 
     // 연결된 클라이언트 목록을 업데이트하여 emit합니다.
@@ -69,7 +62,6 @@ export class ChatGateway {
     if (client.rooms.has(room)) {
       return;
     }
-
     client.join(room);
 
     if (!this.roomUsers[room]) {
@@ -96,7 +88,6 @@ export class ChatGateway {
     if (!client.rooms.has(room)) {
       return;
     }
-
     client.leave(room);
 
     const index = this.roomUsers[room]?.indexOf(this.clientNickName[client.id]);
@@ -111,10 +102,8 @@ export class ChatGateway {
     }
 
     // 모든 방의 유저 목록을 업데이트하여 emit합니다.
-    Object.keys(this.roomUsers).forEach((room) => {
-      this.server
-        .to(room)
-        .emit('userList', { room, userList: this.roomUsers[room] });
+    Object.entries(this.roomUsers).forEach(([room, userList]) => {
+      this.server.to(room).emit('userList', { room, userList });
     });
 
     // 연결된 클라이언트 목록을 업데이트하여 emit합니다.
