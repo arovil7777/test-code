@@ -1,56 +1,60 @@
 body {
     font-family: 'Noto Sans KR', sans-serif;
-    background-color: #fafafa;
-    color: #262626;
+    background-color: #f0f0f0;
+    color: #333;
     margin: 0;
     padding: 10px;
 }
 
 .container {
-    max-width: 600px;
+    max-width: 800px;
     margin: 20px auto;
     background-color: #fff;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
 }
 
 h1 {
-    color: #262626;
+    color: #333;
 }
 
 .room {
-    border: 1px solid #dbdbdb;
+    border: 1px solid #ddd;
     margin-bottom: 20px;
     border-radius: 10px;
     overflow: hidden;
 }
 
 .room h2 {
-    background-color: #fafafa;
-    color: #262626;
+    background-color: #eee;
+    color: #333;
     margin: 0;
     padding: 10px;
+    border-radius: 10px 10px 0 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 700;
 }
 
 .button-container {
     display: flex;
-    justify-content: right;
+    justify-content: center;
     padding: 10px;
 }
 
 .button-container button {
-    margin: 5px;
+    margin: 0 5px;
     padding: 5px 10px;
-    background-color: #3897f0;
+    background-color: #aaa;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .button-container button:hover {
-    background-color: #2779bd;
+    background-color: #888;
 }
 
 .users,
@@ -67,19 +71,21 @@ h1 {
     flex-grow: 1;
     padding: 5px;
     margin-right: 5px;
-    border: 1px solid #dbdbdb;
+    border: 1px solid #ccc;
     border-radius: 5px;
+    border-color: #ddd;
 }
 
 .chat-input button {
-    padding: 5px 1px;
-    background-color: #45aaf2;
+    padding: 5px 10px;
+    background-color: #777;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .chat-input button:hover {
-    background-color: #2d98da;
+    background-color: #555;
 }
