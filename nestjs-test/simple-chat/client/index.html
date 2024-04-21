@@ -11,7 +11,7 @@
     <div class="container">
         <h1>Socket.io 채팅 앱</h1>
         <p>내 닉네임: <span id="random-animal-name"></span></p>
-        <div class="rooms">
+        <div class="rooms" id="rooms-container">
             <div class="room" id="room01">
                 <header>
                     <h2>ROOM 01</h2>
@@ -25,7 +25,7 @@
                     <ul class="chat-list" id="room01-chat-list"></ul>
                 </div>
                 <div class="chat-input">
-                    <input type="text" id="room01-message-input" placeholder="메시지를 입력하세요."
+                    <input type="text" class="room-message-input" id="room01-message-input" placeholder="메시지를 입력하세요."
                         onkeyup="sendMessage(event, 'room01')" />
                     <button onclick="sendRoomMessage('room01')">보내기</button>
                 </div>
@@ -43,7 +43,7 @@
                     <ul class="chat-list" id="room02-chat-list"></ul>
                 </div>
                 <div class="chat-input">
-                    <input type="text" id="room02-message-input" placeholder="메시지를 입력하세요."
+                    <input type="text" class="room-message-input" id="room02-message-input" placeholder="메시지를 입력하세요."
                         onkeyup="sendMessage(event, 'room02')" />
                     <button onclick="sendRoomMessage('room02')">보내기</button>
                 </div>
@@ -53,6 +53,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.js"></script>
     <script>
         const socket = io();
+
+        const rooms = document.querySelector('.room');
         const roomUsers = {
             room01: document.getElementById('room01-users'),
             room02: document.getElementById('room02-users')
@@ -75,27 +77,10 @@
 
         // 임의의 닉네임 지정 (동물)
         const animalNames = [
-            '사자',
-            '낙타',
-            '고양이',
-            '직바오',
-            '침바오',
-            '사슴',
-            '호랑이',
-            '늑대',
-            '여우',
-            '닭',
-            '곰',
-            '쥐',
-            '나무늘보',
-            '침팬지',
-            '까마귀',
-            '비둘기',
-            '캥거루',
-            '강아지',
-            '악어',
-            '고래',
-            '상어'
+            '사자', '낙타', '고양이', '직바오', '침바오',
+            '사슴', '호랑이', '늑대', '여우', '닭',
+            '곰', '쥐', '나무늘보', '침팬지', '까마귀',
+            '비둘기', '캥거루', '강아지', '악어', '고래', '상어'
         ];
 
         const getRandomAnimalName = animalNames[Math.floor(Math.random() * animalNames.length)] + '-' + Math.floor(Math.random() * 100).toString();
