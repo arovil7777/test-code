@@ -13,6 +13,7 @@ export class ChatGateway {
   connectedClients: Set<string> = new Set();
   clientNickName: Map<string, string> = new Map();
   roomUsers: Map<string, string[]> = new Map();
+  maxRoomUsers: Map<string, number> = new Map();
 
   handleConnection(client: Socket): void {
     // 이미 연결되어 있는 클라이언트인지 확인합니다.
@@ -63,10 +64,21 @@ export class ChatGateway {
     if (client.rooms.has(room)) {
       return;
     }
+
+    // 방에 대한 최대 인원을 확인하고, 만약 인원이 가득찼다면 참여를 거부합니다.
+    if (
+      !this.maxRoomUsers.has(room) ||
+      this.roomUsers.get(room).length >= this.maxRoomUsers.get(room)
+    ) {
+      client.emit('joinError', 'Room is full.');
+      return;
+    }
+
     client.join(room);
 
     if (!this.roomUsers.has(room)) {
       this.roomUsers.set(room, []);
+      this.maxRoomUsers.set(room, 5); // 방의 최대 인원을 5명으로 설정합니다. 필요에 따라 변경할 수 있습니다.
     }
 
     this.roomUsers.get(room).push(this.clientNickName.get(client.id));
