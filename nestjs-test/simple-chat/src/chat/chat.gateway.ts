@@ -65,11 +65,14 @@ export class ChatGateway {
       return;
     }
 
+    // 방에 대한 최대 인원을 확인합니다.
+    const maxUsers = this.maxRoomUsers.get(room) || 5; // 기본값으로 방의 최대 인원을 5명으로 설정합니다.
+
+    // 방의 현재 유저 수를 확인합니다.
+    const currentUsers = this.roomUsers.get(room)?.length || 0;
+
     // 방에 대한 최대 인원을 확인하고, 만약 인원이 가득찼다면 참여를 거부합니다.
-    if (
-      !this.maxRoomUsers.has(room) ||
-      this.roomUsers.get(room).length >= this.maxRoomUsers.get(room)
-    ) {
+    if (currentUsers >= maxUsers) {
       client.emit('joinError', 'Room is full.');
       return;
     }
@@ -78,7 +81,6 @@ export class ChatGateway {
 
     if (!this.roomUsers.has(room)) {
       this.roomUsers.set(room, []);
-      this.maxRoomUsers.set(room, 5); // 방의 최대 인원을 5명으로 설정합니다. 필요에 따라 변경할 수 있습니다.
     }
 
     this.roomUsers.get(room).push(this.clientNickName.get(client.id));
