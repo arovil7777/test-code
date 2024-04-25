@@ -73,7 +73,7 @@ export class ChatGateway {
 
     // 방에 대한 최대 인원을 확인하고, 만약 인원이 가득찼다면 참여를 거부합니다.
     if (currentUsers >= maxUsers) {
-      client.emit('joinError', 'Room is full.');
+      client.emit('joinError', '입장 가능 인원이 가득 찼습니다.');
       return;
     }
 
