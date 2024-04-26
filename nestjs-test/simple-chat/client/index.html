@@ -41,21 +41,16 @@
         const roomChatContainer = document.getElementById('room-chat-container');
         const roomMessageInput = document.getElementById('room-message-input');
 
+        // 임의의 닉네임 지정 (동물)
+        const animalNames = [
+            '사자', '낙타', '고양이', '직바오', '침바오',
+            '사슴', '호랑이', '늑대', '여우', '닭',
+            '곰', '쥐', '나무늘보', '침팬지', '까마귀',
+            '비둘기', '캥거루', '강아지', '악어', '고래', '상어'
+        ];
 
-        const getRandomAnimalName = () => {
-            // 임의의 닉네임 지정 (동물)
-            const animalNames = [
-                '사자', '낙타', '고양이', '직바오', '침바오',
-                '사슴', '호랑이', '늑대', '여우', '닭',
-                '곰', '쥐', '나무늘보', '침팬지', '까마귀',
-                '비둘기', '캥거루', '강아지', '악어', '고래', '상어'
-            ];
-            return animalNames[Math.floor(Math.random() * animalNames.length)] + '-' + Math.floor(Math.random() * 100).toString();
-        }
-
-        document.getElementById('random-animal-name').innerHTML = getRandomAnimalName();
-
-        socket.emit('setUserNick', getRandomAnimalName());
+        const getRandomAnimalName = animalNames[Math.floor(Math.random() * animalNames.length)] + '-' + Math.floor(Math.random() * 100).toString();
+        socket.emit('setUserNick', getRandomAnimalName);
 
         const joinRoom = (room) => {
             socket.emit('join', room);
@@ -123,7 +118,7 @@
         })
 
         document.addEventListener('DOMContentLoaded', () => {
-            getRandomAnimalName();
+            document.getElementById('random-animal-name').innerHTML = getRandomAnimalName;
         });
     </script>
 </body>
